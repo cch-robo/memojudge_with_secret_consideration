@@ -1,0 +1,4 @@
+# Do not commit private files.
+/work_private/
+/encode_private/
+/decode_private/
