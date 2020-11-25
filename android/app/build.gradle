@@ -61,3 +61,14 @@ flutter {
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
+
+// my add line start
+def replace_app_name() {
+    exec {
+        commandLine 'sh', '-c', '../../build_assists/scripts/replace_app_name_android.sh'
+    }
+}
+project.afterEvaluate {
+    replace_app_name()
+}
+// my add line end
