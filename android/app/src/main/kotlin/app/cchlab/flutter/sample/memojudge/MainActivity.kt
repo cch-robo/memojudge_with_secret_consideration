@@ -1,4 +1,4 @@
-package app.cchlab.flutter.sample.meojudge
+package app.cchlab.flutter.sample.memojudge
 
 import io.flutter.embedding.android.FlutterActivity
 

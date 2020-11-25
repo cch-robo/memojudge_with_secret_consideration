@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="app.cchlab.flutter.sample.meojudge">
+    package="app.cchlab.flutter.sample.memojudge">
    <application
-        android:label="meojudge"
+        android:label="memojudge"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
