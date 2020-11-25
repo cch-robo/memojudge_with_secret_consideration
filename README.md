@@ -1,4 +1,4 @@
-# meojudge
+# memojudge
 
 Consideration of handling secret information in flutter development
 

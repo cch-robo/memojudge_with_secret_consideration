@@ -1,6 +1,6 @@
 {
-    "name": "meojudge",
-    "short_name": "meojudge",
+    "name": "memojudge",
+    "short_name": "memojudge",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
