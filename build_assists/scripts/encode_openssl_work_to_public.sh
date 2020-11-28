@@ -74,7 +74,8 @@ then
 		mkdir ../encode_public
 	fi
 
-  # opensslエンコード  openssl enc -aes-256-cbc -e -pbkdf2 -iter 100000 -base64 -salt -in ../work_private/"$1" -out ../encode_public/"$2" -pass pass:$3
+  # opensslエンコード
+  openssl enc -aes-256-cbc -e -pbkdf2 -iter 100000 -base64 -salt -in ../work_private/"$1" -out ../encode_public/"$2" -pass pass:$3
 	if [ ! -e ../encode_public/"$2" ]
 	then
     echo ""
