@@ -35,6 +35,14 @@ then
   exit 1
 fi
 
+# 入力元ディレクトリチェック
+if [ ! -e build_assists/work_private ]
+then
+  mkdir build_assists/work_private
+  echo "The 'build_assists/work_private/' directory is not exist,  you must create it."
+  failed
+fi
+
 #オプションチェック
 if [ $# -eq 3 ]
 then
@@ -56,8 +64,7 @@ then
 		mkdir ../encode_public
 	fi
 
-  # opensslエンコード
-  openssl enc -aes-256-cbc -e -pbkdf2 -iter 100000 -base64 -salt -in ../work_private/"$1" -out ../encode_public/"$2" -md sha256 -pass pass:$3
+  # opensslエンコード  openssl enc -aes-256-cbc -e -pbkdf2 -iter 100000 -base64 -salt -in ../work_private/"$1" -out ../encode_public/"$2" -pass pass:$3
 	if [ ! -e ../encode_public/"$2" ]
 	then
     echo ""

@@ -34,6 +34,14 @@ then
   exit 1
 fi
 
+# 入力元ディレクトリチェック
+if [ ! -e build_assists/work_private ]
+then
+  mkdir build_assists/work_private
+  echo "The 'build_assists/work_private/' directory is not exist,  you must create it."
+  failed
+fi
+
 #オプションチェック
 if [ $# -eq 2 ]
 then
