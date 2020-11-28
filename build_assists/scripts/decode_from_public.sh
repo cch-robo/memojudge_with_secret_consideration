@@ -66,7 +66,7 @@ then
 	fi
 
   # opensslデコード
-  openssl enc -aes-256-cbc -d -pbkdf2 -iter 100000 -base64 -in ../encode_public/"$1" -out ../decode_private/"$2" -md sha256 -pass env:__TEMP_VAR__
+  openssl enc -aes-256-cbc -d -pbkdf2 -iter 100000 -base64 -in ../encode_public/"$1" -out ../decode_private/"$2" -pass env:__TEMP_VAR__
 	if [ $? -ne 0 ]
 	then
     echo ""
