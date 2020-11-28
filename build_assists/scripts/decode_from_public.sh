@@ -33,6 +33,16 @@ then
   exit 1
 fi
 
+# プラットフォームチェック
+if [ -f /System/Applications/App\ Store.app/Contents/MacOS/App\ Store  ]
+then
+  WHICH_OPENSSL=`which openssl`
+  if [ $WHICH_OPENSSL = '/usr/bin/openssl' ]; then
+    echo 'You must install a openssl by homebrew and add [$(brew --prefix openssl)/bin] into PATH.'
+    exit 1
+  fi
+fi
+
 #オプションチェック
 if [ $# -eq 3 ]
 then
