@@ -5,15 +5,15 @@
 このリポジトリは、  
 [Flutter Meetup Osaka #4 - 2020/11/27](https://flutter-jp.connpass.com/event/192795/) - LT発表 [フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) です。  
 GitHub **リポジトリに秘匿情報を commit させない** で、ビルド前に **ビルド環境内で秘匿情報ファイルを復元** させて、  
-` $ flutter run ` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせるためのサンプルを提供します。  
+`$ flutter run` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせるためのサンプルを提供します。  
 
 リポジトリの [GitHub Pages](https://docs.github.com/ja/free-pro-team@latest/github/working-with-github-pages/about-github-pages) で、  
 Flutter開発における [リポジトリでのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の [考察検証](https://github.com/cch-robo/memojudge_with_secret_consideration) についてを説明しています。  
 
 - *本当のシークレット情報をサンプルとして提供する訳には行きませんので、*  
-*具体的には、` $ flutter run ` で実行した際のアプリ名 `memojudge` が、*  
-*環境変数にパスワード内容を設定すれば、*  
-*リポジトリ内に存在しない別名称 `記憶力判定` でビルドされるサンプルを提供します。*
+*具体的には、 `$ flutter run` で実行した際のアプリ名 `memojudge` が、*  
+*環境変数にパスワード内容等を設定すれば、*  
+*リポジトリ内に存在しない別名称 `記憶力判定` などでビルドされるサンプルを提供します。*
 
 
 - 考察検証リポジトリとシークレット情報取扱の資料について。  
