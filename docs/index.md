@@ -43,8 +43,11 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 このリポジトリのコードやスクリプトおよびコンテンツも [BSD-3-Clause License ライセンス](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/LICENSE) に則り、  
 自由に御利用ください。  
 
-|![ミニゲーム・デモ](images/minigame-demo.gif)|
-|------------|
+<table><thead><tr><th>
+
+![ミニゲーム・デモ](images/minigame-demo.gif)
+
+</th></tr></thead></table>
 
   - [Flutter初心者向け講座（ミニゲームを作ろう）](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205)  
   [https://tokyo.gdgjapan.org/devfest2020/schedule/2/205](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205)
