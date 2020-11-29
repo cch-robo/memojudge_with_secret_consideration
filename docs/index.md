@@ -49,7 +49,7 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 </th></tr></thead></table>
 
 <table><thead><tr><th>
-<img src=images/minigame-demo.gif" alt="ミニゲーム・デモ" style="max-width:100%;">
+<img src="images/minigame-demo.gif" alt="ミニゲーム・デモ" style="max-width:100%;">
 </th></tr></thead></table>
 
   - [Flutter初心者向け講座（ミニゲームを作ろう）](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205)  
