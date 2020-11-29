@@ -22,42 +22,22 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 - *リポジトリ内のスクリプトは、macOS および Linux での `bash` や `zsh` での実行を想定しています。*  
 *Windows 10環境での動作確認はできていません。*
 
-- 考察検証リポジトリとシークレット情報取扱の資料について。  
-考察検証リポジトリのコードやスクリプトおよびコンテンツは [BSD-3-Clause License ライセンス](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/LICENSE) に則り、  
-自由に御利用ください。  
-  - [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration)  
-  [https://github.com/cch-robo/memojudge_with_secret_consideration](https://github.com/cch-robo/memojudge_with_secret_consideration)
 
-  - [リポジトリでのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) テキスト  
-  [https://www2.slideshare.net/cch-robo/ss-239527695](https://www2.slideshare.net/cch-robo/ss-239527695)
+---
+### 秘匿情報を復元するために何をしているのか
 
-  - [リポジトリでのシークレット情報取扱考察検証](https://cch-robo.github.io/memojudge_with_secret_consideration/) テキスト  
-  [https://cch-robo.github.io/memojudge_with_secret_consideration/](https://cch-robo.github.io/memojudge_with_secret_consideration/)
+検証リポジトリでは、**秘匿情報を復元する基本的なパターン**を行う２種類のスクリプトを実装しました。  
+*スクリプトを使わない⇒リポジトリ内情報のみの⇒ビルド結果は、アプリ名が`memojudge`になります。*
 
+- Aパターン (環境変数で 秘匿ファイルの復元データを取り扱う)  
+  - 環境変数に秘匿情報の復元データ(Base64エンコード文字列)を設定することで、  
+  リポジトリに存在しない秘匿情報(アプリ名`メモ判定`)をビルド結果に反映できるスクリプト。
 
-- サンプルアプリは、 [DevFest 2020 セッション](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205) で発表したミニゲームをベースにしています。  
-[リポジトリ](https://github.com/cch-robo/DevFest-Kyoto-2020) の GitHubページには、 [講座テキスト](https://cch-robo.github.io/DevFest-Kyoto-2020/index.html) もありますので、よろしければ こちらも御参照ください。  
-　  
-講座テキスト内容は、ステップごとにアプリのコードを追加改修していきながら、  
-画面の部分更新やアニメーションやタイマーの使い方の基本を学ぶ形式になっています。  
-ライブラリも使いますが、学んだ基本知識を応用して、ボタン操作のイベントやタイマーを使った自動処理で、  
-アニメーションを伴ったリアクションを返す画面を作る考え方を伝え、最終的に簡単なゲームアプリを作ります。  
-　  
-このリポジトリのコードやスクリプトおよびコンテンツも [BSD-3-Clause License ライセンス](https://github.com/cch-robo/DevFest-Kyoto-2020/blob/master/LICENSE) に則り、  
-自由に御利用ください。  
-
-<table><thead><tr><th>
-<img src="images/minigame-demo.gif" alt="ミニゲーム・デモ" style="max-width:100%;">
-</th></tr></thead></table>
-
-  - [Flutter初心者向け講座（ミニゲームを作ろう）](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205)  
-  [https://tokyo.gdgjapan.org/devfest2020/schedule/2/205](https://tokyo.gdgjapan.org/devfest2020/schedule/2/205)
-
-  - [講座リポジトリ](https://github.com/cch-robo/DevFest-Kyoto-2020)  
-  [https://github.com/cch-robo/DevFest-Kyoto-2020](https://github.com/cch-robo/DevFest-Kyoto-2020)
-
-  - [講座テキスト](https://cch-robo.github.io/DevFest-Kyoto-2020/index.html)  
-  [https://cch-robo.github.io/DevFest-Kyoto-2020/index.html](https://cch-robo.github.io/DevFest-Kyoto-2020/index.html)
+- Bパターン (環境変数で 秘匿ファイルの復号化キーを取り扱う)  
+  - 環境変数に秘匿情報の復号キー(OpenSSL暗号化秘匿情報ファイルのパスワード)を設定することで、  
+  リポジトリに存在しない秘匿情報(アプリ名`記憶力判定`)をビルド結果に反映できるスクリプト。
+  
+<br/>
 
 ---
 ### 検証準備と注意事項
@@ -100,7 +80,7 @@ Base64や OpenSSL コマンドについては、P.12 〜 P.20 を御確認くだ
 ---
 ### リポジトリに保管されていない秘匿情報の復元検証
 
-検証リポジトリでは、**秘匿情報を復元する基本的なパターン**を行う２種類のスクリプトを実装しました。
+検証リポジトリでは、**秘匿情報を復元する基本的なパターン**を行う２種類のスクリプトを実装しています。
 
 - Aパターン (環境変数で 秘匿ファイルの復元データを取り扱う)  
   - 環境変数に秘匿情報の復元データ(Base64エンコード文字列)を設定することで、  
@@ -121,9 +101,9 @@ Base64や OpenSSL コマンドについては、P.12 〜 P.20 を御確認くだ
 `$flutter run`を実行させても、  
 **通常のビルド**(アプリ名が`memojudge`)しか行われないことを確認する。
 
-2. **環境変数**に、**秘匿情報の復元データ** または **復号キー**を設定(A/B)して、  
+2. **環境変数**に、**秘匿情報の復元データ** または **復号キー**を設定(A/Bパターン)して、  
 ビルド前に **秘匿情報ファイルの復元**を実行し、`$ flutter run`ビルドを行なわせれば、  
-**リポジトリに存在しない秘匿情報を伴ったビルド**(アプリ名の変更)が行われることを確認します。  
+**リポジトリに存在しない秘匿情報を伴ったビルド**(アプリ名の変更)が行われることを確認する。  
 
 <br/>
 <br/>
@@ -276,9 +256,6 @@ $ flutter run
 
 <br/>
 <br/>
-
----
-### 秘匿情報を復元するために何をしているのか
 
 ---
 ### むすび
