@@ -16,8 +16,10 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 - *本当のシークレット情報をサンプルとして提供する訳には行きませんので、*  
 *具体的には、 `$ flutter run` で実行した際のアプリ名 `memojudge` が、*  
 *環境変数にパスワード内容等を設定すれば、*  
-*リポジトリ内に存在しない別名称 `記憶力判定` などでビルドされるサンプルを提供します。*
+*リポジトリ内に存在しない別名称 `記憶力判定` などでビルドされるサンプルを提供します。*  
 
+- *リポジトリ内のスクリプトは、macOS および Linux での `bash` や `zsh` での実行を想定しています。*  
+*Windows 10環境での動作確認はできていません。*
 
 - 考察検証リポジトリとシークレット情報取扱の資料について。  
 考察検証リポジトリのコードやスクリプトおよびコンテンツは [BSD-3-Clause License ライセンス](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/LICENSE) に則り、  
@@ -57,10 +59,184 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
   [https://cch-robo.github.io/DevFest-Kyoto-2020/index.html](https://cch-robo.github.io/DevFest-Kyoto-2020/index.html)
 
 ---
-### 準備
+### 検証準備と注意事項
+
+- 考察検証リポジトリ（プロジェクト）のクローン  
+考察検証リポジトリを以下のコマンドでクローンしてください。  
+```$ git clone https://github.com/cch-robo/memojudge_with_secret_consideration.git```
+  - *リポジトリ内のスクリプトは、macOS および Linux での `bash` や `zsh` での実行を想定しています。*  
+  ***Windows 10環境での動作確認はできていません。***
+
+  - 検証に使うスクリプト(下記)は、プロジェクト・ルートディレクトリからの実行を想定しています。  
+  `decode_from_private.sh`、 `decode_from_public.sh`、  
+  `encode_base64_work_to_private.sh`、 `encode_openssl_work_to_private.sh`、  
+  `restore_app_name_secret_by_base64.sh`、 `restore_app_name_secret_by_openssl.sh`
+
+- リポジトリに秘匿情報を保管させないコンセプトについては、  
+[リポジトリでのシークレット情報取扱考察](https://drive.google.com/file/d/1Btkbz85rWSvjfQIcWmNjvfU8YDJJ7IXR/view) 全般を御確認ください。  
+秘匿情報のエンコード/デコードおよび暗号化/復号化に利用する  
+Base64や OpenSSL コマンドについては、P.12 〜 P.20 を御確認ください。
+
+- 秘匿情報の暗号化/復号化には、OpenSSL 1.1.1 以上の共通鍵暗号方式を使います。  
+`$ openssl version` で、お使いの環境が OpenSSL 1.1.1 以上になっているか確認してください。
+
+- macOS 特有の注意事項
+  - `homebrew` を使って最新の `OpenSSL` をインストールするかアップデートしてください。  
+  macOS 標準の openssl コマンドの実態は LibreSSL になっています。  
+  OpenSSLのインストールや環境設定の概要については、  
+  [リポジトリでのシークレット情報取扱考察](https://drive.google.com/file/d/1Btkbz85rWSvjfQIcWmNjvfU8YDJJ7IXR/view) の P.20 を御確認ください。
+
+  - Android Studio の `terminal`では、`OpenSSL`を優先化するパス設定を行ってください。  
+  Android Studio の `Terminal`では、`LibreSSL`が優先化されるようです。  
+  このため `~zshrc`や `~bashrc`で `OpenSSL`へのパス設定を行っていても、  
+  そこで、`$ export "PATH=$(brew --prefix openssl)/bin:$PATH"` を実行して、  
+  インストールした OpenSSL へのパス `/usr/local/opt/openssl@1.1` を優先化してください。
+
+  - `LibreSSL`が有効になっている場合、暗号化や復号化処理がマルウェアと判断される場合があります。
+  ![マルウェア警告](images/malware_alert.png)
+
 
 ---
 ### リポジトリに保管されていない秘匿情報の復元検証
 
+**【概要】**  
+リポジトリクローンしたプロジェクト内において、以下が行われることを確認します。
+
+1. 環境変数に何も設定していなければ、  
+ビルド前に **秘匿情報ファイルの復元**を実行し、`$flutter run`を実行させても、  
+**通常のビルド**(アプリ名が`memojudge`)しか行われないことを確認する。
+
+2. **環境変数**に、**秘匿情報の復元データ** または **復号キー**を設定して、  
+ビルド前に **秘匿情報ファイルの復元**を実行し、`$ flutter run`ビルドを行なわせれば、  
+**リポジトリに存在しない秘匿情報を伴ったビルド**(アプリ名の変更)が行われることを検証します。
+
+
+#### 通常パターンの検証 (秘匿情報を復元しない)
+
+- **【概要】**  
+環境変数への設定を行わず、  
+ビルド環境内で **秘匿情報ファイルを復元**を実行して、`$ flutter run`ビルドを行わせます。  
+*結果として、秘匿情報の復元が行われず通常のビルドが行われる。（アプリ名は、`memojudge`になる）*
+
+##### iOS 検証手順
+```bash
+# flutter run 実行前に、iOS シミュレーターを起動しておいてください。
+$ ./build_assists/scripts/decode_from_private.sh APP_NAME_IOS decode_app_name_ios.txt
+$ flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/normal_app_name_ios.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/normal_app_name_ios_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+##### Android 検証手順
+```bash
+# flutter run 実行前に、Android エミュレーターを起動しておいてください。
+./build_assists/scripts/decode_from_private.sh APP_NAME_ANDROID decode_app_name_android.txt
+flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/normal_app_name_android.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/normal_app_name_android_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+
+#### Aパターンの検証 (環境変数に復元データをもたせる)
+
+- **【概要】**  
+**リポジトリに存在しない秘匿情報**を  
+指定の環境変数に **秘匿情報ファイルの Base64デコード文字列**として設定し、  
+ビルド環境内で **秘匿情報ファイルを復元**してから、`$ flutter run`ビルドさせるパターン。  
+　  
+*Base64デコード文字列を `build_assists/experiment`のファイルから取得していますが、*  
+*これは実験のために用意していたもののため、本来のリポジトリには含まれていないリソースです。*
+
+##### iOS 検証手順
+```bash
+# flutter run 実行前に、iOS シミュレーターを起動しておいてください。
+$ export APP_NAME_IOS=`cat ./build_assists/experiment/encode_app_name_ios.txt`
+$ ./build_assists/scripts/decode_from_private.sh APP_NAME_IOS decode_app_name_ios.txt
+$ flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/base64_decode_app_name_ios.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/base64_decode_app_name_ios_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+##### Android 検証手順
+```bash
+# flutter run 実行前に、Android エミュレーターを起動しておいてください。
+export APP_NAME_ANDROID=`cat ./build_assists/experiment/encode_app_name_android.txt`
+./build_assists/scripts/decode_from_private.sh APP_NAME_ANDROID decode_app_name_android.txt
+flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/base64_decode_app_name_android.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/base64_decode_app_name_android_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+#### Bパターンの検証 (環境変数に復号キーをもたせる)
+
+- **【概要】**  
+環境変数に **秘匿情報ファイルの 復号キー(パスワード)** を設定し、  
+ビルド環境内で **リポジトリに直接存在しないが、暗号化済の秘匿情報**から  
+**秘匿情報ファイルを復元**して、`$ flutter run`ビルドさせるパターン。  
+　  
+*OpenSSL暗号化データを `build_assists/encode_public`のファイルから取得しています。*  
+*これは暗号化済の秘匿情報ファイルのため、本来のリポジトリに元から含めて良いリソースです。*
+
+##### iOS 検証手順
+```bash
+# flutter run 実行前に、iOS シミュレーターを起動しておいてください。
+$ export PASSWD=hogefuga
+$ ./build_assists/scripts/decode_from_public.sh encode_app_name_ios.txt decode_app_name_ios.txt PASSWD
+$ flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/openssl_decode_app_name_ios.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/openssl_decode_app_name_ios_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+##### Android 検証手順
+```bash
+# flutter run 実行前に、Android エミュレーターを起動しておいてください。
+$ export PASSWD=hogefuga
+$ ./build_assists/scripts/decode_from_public.sh encode_app_name_android.txt decode_app_name_android.txt PASSWD
+flutter run
+```
+
+<table>
+<thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
+<tr>
+  <td><img src="images/openssl_decode_app_name_android.png" alt="ホーム画面" style="max-width:100%;"></td>
+  <td><img src="images/openssl_decode_app_name_android_icon.png" alt="アイコン" style="max-width:100%;"></td>
+</tr>
+</table>
+
+
+
 ---
 ### 秘匿情報を復元するために何をしているのか
+
+---
+### むすび
