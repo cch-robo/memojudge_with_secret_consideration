@@ -38,7 +38,7 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 ライブラリも使いますが、学んだ基本知識を応用して、ボタン操作のイベントやタイマーを使った自動処理で、  
 アニメーションを伴ったリアクションを返す画面を作る考え方を伝え、最終的に簡単なゲームアプリを作ります。  
 　  
-このリポジトリのコードやスクリプトおよびコンテンツも [BSD-3-Clause License ライセンス](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/LICENSE) に則り、  
+このリポジトリのコードやスクリプトおよびコンテンツも [BSD-3-Clause License ライセンス](https://github.com/cch-robo/DevFest-Kyoto-2020/blob/master/LICENSE) に則り、  
 自由に御利用ください。  
 
 |![ミニゲーム・デモ](docs/images/minigame-demo.gif)|
