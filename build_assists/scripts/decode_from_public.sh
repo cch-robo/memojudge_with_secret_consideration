@@ -33,6 +33,16 @@ then
   exit 1
 fi
 
+# プラットフォームチェック
+if [ -f /System/Applications/App\ Store.app/Contents/MacOS/App\ Store  ]
+then
+  WHICH_OPENSSL=`which openssl`
+  if [ $WHICH_OPENSSL = '/usr/bin/openssl' ]; then
+    echo 'You must install a openssl by homebrew and add [$(brew --prefix openssl)/bin] into PATH.'
+    exit 1
+  fi
+fi
+
 #オプションチェック
 if [ $# -eq 3 ]
 then
@@ -66,7 +76,7 @@ then
 	fi
 
   # opensslデコード
-  openssl enc -aes-256-cbc -d -pbkdf2 -iter 100000 -base64 -in ../encode_public/"$1" -out ../decode_private/"$2" -md sha256 -pass env:__TEMP_VAR__
+  openssl enc -aes-256-cbc -d -pbkdf2 -iter 100000 -base64 -in ../encode_public/"$1" -out ../decode_private/"$2" -pass env:__TEMP_VAR__
 	if [ $? -ne 0 ]
 	then
     echo ""

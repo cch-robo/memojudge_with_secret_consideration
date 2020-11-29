@@ -9,7 +9,7 @@ then
 fi
 
 # 暗号化データを復号化する
-./build_assists/scripts/decode_from_public.sh encode_app_name.txt decode_app_name.txt PASSWD
+./build_assists/scripts/decode_from_private.sh APP_NAME decode_app_name.txt
 if [ $? -ne 0 ]
 then
   echo ""
@@ -18,4 +18,7 @@ then
 fi
 
 echo "decoding the app name secret success."
+
+# アプリをビルドして実行する。（エミュレータか実機が接続されてること）
+flutter run
 exit 0
