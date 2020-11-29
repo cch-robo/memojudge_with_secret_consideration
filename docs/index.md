@@ -44,11 +44,6 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 自由に御利用ください。  
 
 <table><thead><tr><th>
-<img src="/cch-robo/memojudge_with_secret_consideration/raw/master/docs/images/minigame-demo.gif"
- alt="ミニゲーム・デモ" style="max-width:100%;">
-</th></tr></thead></table>
-
-<table><thead><tr><th>
 <img src="images/minigame-demo.gif" alt="ミニゲーム・デモ" style="max-width:100%;">
 </th></tr></thead></table>
 
