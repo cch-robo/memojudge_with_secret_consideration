@@ -6,7 +6,7 @@
 
 このテキストは、 [Flutter Meetup Osaka #4 - 2020/11/27](https://flutter-jp.connpass.com/event/192795/) - LT発表 [フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の検証編です。  
 GitHub **リポジトリに秘匿情報を commit させない** で、ビルド前に **ビルド環境内で秘匿情報ファイルを復元** させて、  
-` $ flutter run ` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせる、  
+`$ flutter run` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせる、  
 Flutter開発における [リポジトリでのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) について説明します。  
 
 - *Flutter に関する技術的情報􏰁は、ほとんどないことや、*  
@@ -14,7 +14,7 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 *ここで􏰁は簡易に内製化できる範囲にとどめます旨、御了承願います。*
 
 - *本当のシークレット情報をサンプルとして提供する訳には行きませんので、*  
-*具体的には、` $ flutter run ` で実行した際のアプリ名 `memojudge` が、*  
+*具体的には、 `$ flutter run` で実行した際のアプリ名 `memojudge` が、*  
 *環境変数にパスワード内容を設定すれば、*  
 *リポジトリ内に存在しない別名称 `記憶力判定` でビルドされるサンプルを提供します。*
 
