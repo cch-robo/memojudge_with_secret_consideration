@@ -43,7 +43,6 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 このリポジトリのコードやスクリプトおよびコンテンツも [BSD-3-Clause License ライセンス](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/LICENSE) に則り、  
 自由に御利用ください。  
 
-|------------|
 |![ミニゲーム・デモ](docs/images/minigame-demo.gif) |
 |------------|
 
