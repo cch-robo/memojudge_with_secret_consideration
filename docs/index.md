@@ -13,7 +13,7 @@
 このテキストは、 [Flutter Meetup Osaka #4 - 2020/11/27](https://flutter-jp.connpass.com/event/192795/) - LT発表 [フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の検証編です。  
 GitHub **リポジトリに秘匿情報を commit させない** で、ビルド前に **ビルド環境内で秘匿情報ファイルを復元** させて、  
 `$ flutter run` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせる、  
-Flutter開発における [リポジトリでのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) での検証方法と、  
+Flutter開発における [リポジトリでのシークレット情報取扱考察](https://drive.google.com/file/d/1Btkbz85rWSvjfQIcWmNjvfU8YDJJ7IXR/view) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) での検証方法と、  
 「リポジトリに存在しない秘匿情報を復元するために、具体的に何をしているのか」についての解説です。  
 
 - Flutter に関する技術的情報は、ほとんどないことや、  
@@ -138,7 +138,7 @@ project.afterEvaluate {
 #### 秘匿情報を復元する基本的なパターンの全体フロー
 
 秘匿情報を復元する基本的なパターン実現するためには、  
-入力秘匿情報ファイルのエンコード〜秘匿情報ファイル復元のデコード〜復元秘匿情報ファイルの配置…までのフローが必要です。  
+入力秘匿情報ファイルのエンコード〜秘匿情報ファイル復元のデコード〜復元秘匿情報ファイルの配置…までのフローを行います。  
 検証リポジトリでは、以下の全体フロー(秘匿情報の入力から復元ファイルの配置までのフロー)を採っています。
 
 - A パターン (環境変数で 秘匿情報ファイルの復元データを取り扱う)  
@@ -147,15 +147,15 @@ project.afterEvaluate {
     [encode_base64_work_to_private.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_base64_work_to_private.sh) スクリプトで、
     `work_private/`に配置した秘匿情報ファイルをエンコードして、`encode_private/`に出力します。  
     *`work_private/`は、非公開ディレクトリのためリポジトリに存在しないので、エンコード前に手動生成しておきます。*  
-    *生成したBase64エンコード文字列(Base64エンコードファイル)は、リポジトリ外部に保管する必要があります。*
+    *生成したBase64エンコード文字列(Base64エンコードファイル)は、リポジトリ外で管理する必要があります。*
 
     - **ビルド中処理**(復元秘匿情報ファイルの配置先コピー)をビルド中にキックさせる設定を追加  
     *【ビルド中処理】の `復元秘匿情報ファイルをリソース先に配置(コピー)`を参照*
 
   - 【ビルド前】  
     - 指定名の環境変数に 秘匿情報ファイルのBase64エンコード文字列（秘匿ファイルの復元データ）を設定  
-    *設定するエンコード文字列は、リポジトリ外に保管しておいたBase64エンコードファイルなどから取得します。*
-    
+    *設定するエンコード文字列は、リポジトリ外で管理しておいたBase64エンコードファイルなどから取得します。*
+
     - 環境変数の 秘匿情報ファイルのBase64エンコード文字列をデコードして、秘匿情報ファイルを復元  
     [decode_from_private.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_private.sh) スクリプトで、
     環境変数に設定された秘匿情報ファイルのBase64エンコード文字列をデコードして、`decode_private/`に出力します。  
@@ -167,15 +167,53 @@ project.afterEvaluate {
     またビルド中に任意処理をキックさせる設定(秘匿情報復元ビルド設定)もプラットフォームごとに異なるため、
     プラットフォームごとの**専用配置スクリプト**は、プラットフォームごとの**秘匿情報復元ビルド設定**に追加します。  
     　  
-    ***ビルド中処理**をビルド中にキックさせる設定については、[秘匿情報復元ビルド設定]()を参照ください。*  
+    ***ビルド中処理**をビルド中にキックさせる設定については、[秘匿情報復元ビルド設定](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html#%E7%A7%98%E5%8C%BF%E6%83%85%E5%A0%B1%E5%BE%A9%E5%85%83%E3%83%93%E3%83%AB%E3%83%89%E8%A8%AD%E5%AE%9A) を参照ください。*  
     *検証リポジトリでは、アプリ名変更のための**専用配置スクリプト**が実装されています。*  
     *iOS用⇒[replace_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_ios.sh)*  
     *Android用⇒[replace_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_android.sh)*  
 
-  - 【備考】
+  - 【備考】  
     - `decode_private`に復元秘匿情報ファイルが存在していれば、秘匿情報ファイルを復元する必要はありません。  
     検証リポジトリでは、ビルド結果に反映される秘匿情報を `decode_private`に配置された復元秘匿情報ファイルから取得しています。  
-    
+
+<br/>
+
+- Bパターン (環境変数で 秘匿情報ファイルの復号化キーを取り扱う)  
+  - 【事前準備】  
+    - 秘匿情報ファイルをOpenSSLでエンコード(暗号化)して、秘匿情報ファイルのエンコード(暗号化)ファイルを生成  
+    [encode_openssl_work_to_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_openssl_work_to_public.sh) スクリプトで、
+    指定された暗号キー(パスワード文字列)を使い `work_private/`に配置した秘匿情報ファイルをエンコード(暗号化)して、`encode_public/`に出力します。  
+    *`work_private/`は、非公開ディレクトリのためリポジトリに存在しないので、エンコード前に手動生成しておきます。*  
+    *`encode_public/`に出力された、秘匿情報ファイルの OpenSSLエンコード(暗号化)ファイルは、暗号化済なのでリポジトリに `commit`できます。*  
+    *暗号キー(パスワード文字列)は、リポジトリ外で管理する必要があります。*
+
+    - **ビルド中処理**(復元秘匿情報ファイルの配置先コピー)をビルド中にキックさせる設定を追加  
+    *【ビルド中処理】の `復元秘匿情報ファイルをリソース先に配置(コピー)`を参照*
+
+  - 【ビルド前】  
+    - 指定名の環境変数に 秘匿情報ファイルのOpenSSLエンコード(暗号化)に使用した、復号キー(パスワード文字列)を設定  
+    *設定する復号キー⇒暗号キー(パスワード文字列)は、リポジトリ外の管理先などから取得します。*
+
+    - 環境変数の 複合キー(パスワード文字列)を使い、暗号化された秘匿情報ファイルをOpenSSLデコード(復号化)して、秘匿情報ファイルを復元  
+    [decode_from_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_public.sh) スクリプトで、
+    環境変数に設定された複合キー(パスワード文字列)を使い暗号化された秘匿情報ファイルをOpenSSLデコード(復号化)して、`decode_private/`に出力します。
+
+  - 【ビルド中処理】
+    - 復元秘匿情報ファイルをリソース先に配置(コピー)  
+    `decode_private/`に配置された復元秘匿情報ファイルは、
+    ファイルごとかつプラットフォームごとにコピー先が異なるため、**専用配置スクリプト**をプラットフォーム別で用意します。  
+    またビルド中に任意処理をキックさせる設定(秘匿情報復元ビルド設定)もプラットフォームごとに異なるため、
+    プラットフォームごとの**専用配置スクリプト**は、プラットフォームごとの**秘匿情報復元ビルド設定**に追加します。  
+    　  
+    ***ビルド中処理**をビルド中にキックさせる設定については、[秘匿情報復元ビルド設定](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html#%E7%A7%98%E5%8C%BF%E6%83%85%E5%A0%B1%E5%BE%A9%E5%85%83%E3%83%93%E3%83%AB%E3%83%89%E8%A8%AD%E5%AE%9A) を参照ください。*  
+    *検証リポジトリでは、アプリ名変更のための**専用配置スクリプト**が実装されています。*  
+    *iOS用⇒[replace_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_ios.sh)*  
+    *Android用⇒[replace_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_android.sh)*  
+
+  - 【備考】  
+    - `decode_private`に復元秘匿情報ファイルが存在していれば、秘匿情報ファイルを復元する必要はありません。  
+    検証リポジトリでは、ビルド結果に反映される秘匿情報を `decode_private`に配置された復元秘匿情報ファイルから取得しています。  
+
 <br/>
 
 **秘匿情報を復元するために何をしているのか**を確認したので、  
@@ -422,3 +460,10 @@ $ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
 
 ---
 ### むすび
+
+[フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) と  
+考察検証説明の [Flutter 開発リポジトリにシークレット情報を保管させない。](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html)   
+および [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) の内容は、簡易に内製化できる範囲にとどまっています。  
+このため商用 CI/CD サービスを使ってシークレット情報管理をされている方から見れば、初歩レベルと思います。
+
+もしもこの**リポジトリに秘匿情報を保管させない考察**と **考察検証リポジトリ**が、お役に立つことがあれば幸いです。
