@@ -182,7 +182,7 @@ project.afterEvaluate {
   - 【事前準備】  
     - 秘匿情報ファイルをOpenSSLでエンコード(暗号化)して、秘匿情報ファイルのエンコード(暗号化)ファイルを生成  
     [encode_openssl_work_to_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_openssl_work_to_public.sh) スクリプトで、
-    指定された暗号キー(パスワード文字列)を使い `work_private/`に配置した秘匿情報ファイルをエンコード(暗号化)して、`encode_public/`に出力します。  
+    指定された暗号キー(パスワード文字列)を使い `work_private/`に配置した秘匿情報ファイルをエンコード(暗号化)して、`encode_public/`に出力します。  
     *`work_private/`は、非公開ディレクトリのためリポジトリに存在しないので、エンコード前に手動生成しておきます。*  
     *`encode_public/`に出力された、秘匿情報ファイルの OpenSSLエンコード(暗号化)ファイルは、暗号化済なのでリポジトリに `commit`できます。*  
     *暗号キー(パスワード文字列)は、リポジトリ外で管理する必要があります。*
