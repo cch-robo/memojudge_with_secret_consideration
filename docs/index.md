@@ -13,7 +13,7 @@
 このテキストは、 [Flutter Meetup Osaka #4 - 2020/11/27](https://flutter-jp.connpass.com/event/192795/) - LT発表 [フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の検証編です。  
 GitHub **リポジトリに秘匿情報を commit させない** で、ビルド前に **ビルド環境内で秘匿情報ファイルを復元** させて、  
 `$ flutter run` コマンド実行時に、復元した秘匿情報ファイルを伴なわせてビルドさせる、  
-Flutter開発における [リポジトリでのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) での検証方法と、  
+Flutter開発における [リポジトリでのシークレット情報取扱考察](https://drive.google.com/file/d/1Btkbz85rWSvjfQIcWmNjvfU8YDJJ7IXR/view) の [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) での検証方法と、  
 「リポジトリに存在しない秘匿情報を復元するために、具体的に何をしているのか」についての解説です。  
 
 - Flutter に関する技術的情報は、ほとんどないことや、  
@@ -460,3 +460,10 @@ $ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
 
 ---
 ### むすび
+
+[フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) と  
+考察検証説明の [Flutter 開発リポジトリにシークレット情報を保管させない。](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html)   
+および [考察検証リポジトリ](https://github.com/cch-robo/memojudge_with_secret_consideration) の内容は、簡易に内製化できる範囲にとどまっています。  
+このため商用 CI/CD サービスを使ってシークレット情報管理をされている方から見れば、初歩レベルと思います。
+
+もしもこの**リポジトリに秘匿情報を保管させない考察**と **考察検証リポジトリ**が、お役に立つことがあれば幸いです。
