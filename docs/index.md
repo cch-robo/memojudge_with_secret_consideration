@@ -459,6 +459,38 @@ $ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
 <br/>
 
 ---
+### おまけ（リポジトリファイルの一部分を秘匿情報で置換する）
+
+復元した秘匿情報ファイルを配置先にコピー（リソースファイルの追加/置換）するだけでなく、  
+アプリ名を変更するため、リソースファイルの一部分のみを「復元した秘匿情報で置換」するサンプルも作りました。
+
+ブランチを `rewrite_secrete_item`切り替えれば、ビルド中にキックされるスクリプトが、  
+iOS ⇒ [rewrite_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_ios.sh) に、
+Android ⇒ [rewrite_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_android.sh) に変更されます。
+
+この状況で、環境変数 `APP_NAME` に「変更する**任意のアプリ名**を Base64エンコードした文字列」を設定して、  
+[restore_app_name_secret_by_base64.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/restore_app_name_secret_by_base64.sh) を実行すれば、
+アプリ名を**任意のアプリ名**に変更することができます。  
+*処理内容的には、アプリ名を変更するため、`ios/Runner/Info.plist`の `CFBundleName`のアプリ名値と、*
+*`android/app/src/main/AndroidManifest.xml`の `android:label`のアプリ名値の置換を行っています。*
+
+<br/>
+
+下記のコマンドを実行すると、アプリ名が `名前置換`に変更されますよ。
+
+```
+# アプリ名を設定するリソースファイルのアプリ名部のみを置換するサンプルのブランチ
+$ git checkout rewrite_secrete_item
+
+# flutter run 実行前に、iOS シミュレーターか Android エミュレータを起動しておいてください。
+$ export APP_NAME=5ZCN5YmN572u5o+b
+$ ./build_assists/scripts/restore_app_name_secret_by_base64.sh
+```
+
+<br/>
+<br/>
+
+---
 ### むすび
 
 [フラッター開発でのシークレット情報取扱考察](https://www2.slideshare.net/cch-robo/ss-239527695) と  
