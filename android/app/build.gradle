@@ -65,10 +65,10 @@ dependencies {
 // my add line start
 def replace_app_name() {
     exec {
-        commandLine 'sh', '-c', '../../build_assists/scripts/replace_app_name_android.sh'
 /*
-        commandLine 'sh', '-c', '../../build_assists/scripts/rewrite_app_name_android.sh'
+        commandLine 'sh', '-c', '../../build_assists/scripts/replace_app_name_android.sh'
 */
+        commandLine 'sh', '-c', '../../build_assists/scripts/rewrite_app_name_android.sh'
     }
 }
 project.afterEvaluate {

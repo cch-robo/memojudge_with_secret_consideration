@@ -195,10 +195,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/bin/sh \"$FLUTTER_APPLICATION_PATH/build_assists/scripts/replace_app_name_ios.sh\"\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 /*
-			shellScript = "/bin/sh \"$FLUTTER_APPLICATION_PATH/build_assists/scripts/rewrite_app_name_ios.sh\"\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
+			shellScript = "/bin/sh \"$FLUTTER_APPLICATION_PATH/build_assists/scripts/replace_app_name_ios.sh\"\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 */
+			shellScript = "/bin/sh \"$FLUTTER_APPLICATION_PATH/build_assists/scripts/rewrite_app_name_ios.sh\"\n/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
