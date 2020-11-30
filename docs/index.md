@@ -464,7 +464,7 @@ $ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
 復元した秘匿情報ファイルを配置先にコピー（リソースファイルの追加/置換）するだけでなく、  
 アプリ名を変更するため、リソースファイルの一部分のみを「復元した秘匿情報で置換」するサンプルも作りました。
 
-ブランチを `rewrite_secrete_item`切り替えれば、ビルド中にキックされるスクリプトが、  
+ブランチを `rewrite_secret_item`切り替えれば、ビルド中にキックされるスクリプトが、  
 iOS ⇒ [rewrite_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_ios.sh) に、
 Android ⇒ [rewrite_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_android.sh) に変更されます。
 
@@ -480,7 +480,7 @@ Android ⇒ [rewrite_app_name_android.sh](https://github.com/cch-robo/memojudge_
 
 ```
 # アプリ名を設定するリソースファイルのアプリ名部のみを置換するサンプルのブランチ
-$ git checkout rewrite_secrete_item
+$ git checkout rewrite_secret_item
 
 # flutter run 実行前に、iOS シミュレーターか Android エミュレータを起動しておいてください。
 $ export APP_NAME=5ZCN5YmN572u5o+b
