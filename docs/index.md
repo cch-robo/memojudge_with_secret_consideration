@@ -167,7 +167,7 @@ project.afterEvaluate {
     またビルド中に任意処理をキックさせる設定(秘匿情報復元ビルド設定)もプラットフォームごとに異なるため、
     プラットフォームごとの**専用配置スクリプト**は、プラットフォームごとの**秘匿情報復元ビルド設定**に追加します。  
     　  
-    ***ビルド中処理**をビルド中にキックさせる設定については、[秘匿情報復元ビルド設定](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html#%E7%A7%98%E5%8C%BF%E6%83%85%E5%A0%B1%E5%BE%A9%E5%85%83%E3%83%93%E3%83%AB%E3%83%89%E8%A8%AD%E5%AE%9A)を参照ください。*  
+    ***ビルド中処理**をビルド中にキックさせる設定については、[秘匿情報復元ビルド設定](https://cch-robo.github.io/memojudge_with_secret_consideration/index.html#%E7%A7%98%E5%8C%BF%E6%83%85%E5%A0%B1%E5%BE%A9%E5%85%83%E3%83%93%E3%83%AB%E3%83%89%E8%A8%AD%E5%AE%9A) を参照ください。*  
     *検証リポジトリでは、アプリ名変更のための**専用配置スクリプト**が実装されています。*  
     *iOS用⇒[replace_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_ios.sh)*  
     *Android用⇒[replace_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_android.sh)*  
