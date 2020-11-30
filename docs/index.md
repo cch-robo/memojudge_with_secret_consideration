@@ -29,14 +29,103 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 検証リポジトリでは、**秘匿情報を復元する基本的なパターン**を行う２種類のスクリプトを実装しました。  
 *スクリプトを使わない⇒リポジトリ内情報のみの⇒ビルド結果は、アプリ名が`memojudge`になります。*
 
-- Aパターン (環境変数で 秘匿ファイルの復元データを取り扱う)  
+- Aパターン (環境変数で 秘匿情報ファイルの復元データを取り扱う)  
   - 環境変数に秘匿情報の復元データ(Base64エンコード文字列)を設定することで、  
   リポジトリに存在しない秘匿情報(アプリ名`メモ判定`)をビルド結果に反映できるスクリプト。
 
-- Bパターン (環境変数で 秘匿ファイルの復号化キーを取り扱う)  
+- Bパターン (環境変数で 秘匿情報ファイルの復号化キーを取り扱う)  
   - 環境変数に秘匿情報の復号キー(OpenSSL暗号化秘匿情報ファイルのパスワード)を設定することで、  
   リポジトリに存在しない秘匿情報(アプリ名`記憶力判定`)をビルド結果に反映できるスクリプト。
   
+<br/>
+
+#### 秘匿情報を復元する基本的なパターンの全体構成概要
+
+**秘匿情報を復元する基本的なパターン**を実現するためには、各種機能ごとの連携が必要です。  
+スクリプトを機能させるには、入力元や出力先の規定や、ビルド中に処理をキックさせる設定も必要です。
+検証リポジトリでは、各機能ごとに連携できるよう、以下の全体構成をとりました。
+
+- **秘匿情報復元作業ディレクトリ構成**  
+入力元とエンコードやデコードの出力先およびスクリプトの配置を定めます。
+
+- **秘匿情報復元処理スクリプト**  
+入力された秘匿情報のエンコードやデコードおよびビルド中処理を役割ごとに分けます。
+
+- **秘匿情報復元ビルド設定**  
+ビルド中処理(復元秘匿情報ファイルの配置先コピー)をビルド中にキックさせる設定を追加します。
+
+<br/>
+
+#### 秘匿情報復元作業ディレクトリ構成
+
+<table>
+<tr>
+  <td><img src="images/build_assists_directory.png" alt="秘匿情報復元作業ディレクトリ構成" style="max-width:100%;"></td>
+</tr>
+</table>
+
+|ディレクトリ名|公開 / 非公開|役割概要|
+|----------|:----------:|----------|
+|build_assists|公開|秘匿情報復元作業ディレクトリのルートディレクトリ|
+|scripts|公開|スクリプト配置先ディレクトリ|
+|work_private|非公開|入力用の秘匿情報ファイル配置先ディレクトリ|
+|encode_private|非公開|秘匿情報ファイルの Base64エンコード出力配置先ディレクトリ|
+|encode_public|公開|秘匿情報ファイルの OpenSSLエンコード(暗号化済)出力配置先ディレクトリ|
+|decode_private|非公開|エンコードファイルのデコード(復号化済)出力配置先ディレクトリ|
+|[.gitignore](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/.gitignore)|公開|上記作業ディレクトリの非公開指定設定ファイル|
+
+<br/>
+
+#### 秘匿情報復元処理スクリプト
+
+|スクリプト名|機能種別|役割概要|
+|----------|----------|----------|
+|[encode_base64_work_to_private.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_base64_work_to_private.sh)|Base64エンコード|`work_private/`に配置された秘匿情報ファイルを Base64エンコードして `encode_private/`に出力します。|
+|[encode_openssl_work_to_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_openssl_work_to_public.sh)|OpenSSLエンコード|`work_private/`に配置された秘匿情報ファイルを OpenSSLエンコード(暗号化)して `encode_public/`に出力します。|
+|[decode_from_private.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_private.sh)|Base64デコード|`encode_public/`に配置された暗号化済秘匿情報ファイルを OpenSSLデコード(復号化)して `decode_private/`に出力します。|
+|[decode_from_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_public.sh)|OpenSSLデコード|`encode_private/`に配置されたBase64エンコード済ファイルを Base64デコードして `decode_private/`に出力します。|
+| アプリ名変更専用のリソース置換用スクリプト名 |
+|[restore_app_name_secret_by_openssl.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/restore_app_name_secret_by_openssl.sh)|一括処理|アプリ名変更用の補助スクリプト⇒OpenSSLを使った秘匿情報復元(暗号化済ファイルの復号化)から `$flutter run`までを一括して実行する。（環境変数 `PASSWD`に復号化キー(パスワード)を設定しておく必要があります ）|
+|[replace_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_ios.sh)|ビルド中処理|iOS用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された復元済の秘匿情報ファイル(`decode_app_name_ios.txt`)を`ios/Runner/Info.plist`にコピーします。|
+|[replace_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_android.sh)|ビルド中処理|Android用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された復元済の秘匿情報ファイル(`decode_app_name_android.txt`)を`android/app/src/main/AndroidManifest.xml`にコピーします。|
+| アプリ名変更専用のリソース編集用スクリプト名|
+|[restore_app_name_secret_by_base64.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/restore_app_name_secret_by_base64.sh)|一括処理|アプリ名変更用の補助スクリプト⇒Base64を使った秘匿情報復元(変更するアプリ名の取得)から `$flutter run`までを一括して実行する。（環境変数 `APP_NAME`に Base64エンコードした変更アプリ名を設定しておく必要があります）|
+|[rewrite_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_ios.sh)|ビルド中処理|iOS用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された変更アプリ名(`decode_app_name.txt`)の内容で、`ios/Runner/Info.plist`のアプリ名値を置換編集します。|
+|[rewrite_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_android.sh)|ビルド中処理|Android用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された変更アプリ名(`decode_app_name.txt`)の内容で、`android/app/src/main/AndroidManifest.xml`のアプリ名値を置換編集します。|
+
+<br/>
+
+#### 秘匿情報復元ビルド設定
+
+|プラットフォーム|設定場所|設定方法|
+|----------|----------|----------|
+|iOS|Xcodeプロジェクト&nbsp;>&nbsp;Runner&nbsp;>&nbsp;TARGETS > Build Phase > Run Script|設定に、sh からビルド中スクリプトをキックさせるコマンドを追加する。|
+|Android|app: build.gradle|`build.gradle`ファイルの末尾に `project.afterEvaluate{}`を追加して、ビルド中スクリプトをキックさせる関数を追加する。|
+
+<table>
+<theda><tr><th>iOSビルド設定例示 (Xcodeプロジェクト)</th></tr></theda>
+<tr>
+  <td><img src="images/Xcode_RunScript.png" alt="Xcodeプロジェクト Run Script" style="max-width:100%;"></td>
+</tr>
+</table>
+
+<table>
+<theda><tr><th>Androidビルド設定例示 (app:build.gradle)</th></tr></theda>
+<tr>
+  <td><pre><code>
+def replace_app_name() {
+    exec {
+        commandLine 'sh', '-c', '../../build_assists/scripts/replace_app_name_android.sh'
+    }
+}
+project.afterEvaluate {
+    replace_app_name()
+}
+  </code></pre></td>
+</tr>
+</table>
+
+<br/>
 <br/>
 
 ---
@@ -82,11 +171,11 @@ Base64や OpenSSL コマンドについては、P.12 〜 P.20 を御確認くだ
 
 検証リポジトリでは、**秘匿情報を復元する基本的なパターン**を行う２種類のスクリプトを実装しています。
 
-- Aパターン (環境変数で 秘匿ファイルの復元データを取り扱う)  
+- Aパターン (環境変数で 秘匿情報ファイルの復元データを取り扱う)  
   - 環境変数に秘匿情報の復元データ(Base64エンコード文字列)を設定することで、  
   リポジトリに存在しない秘匿情報(アプリ名`メモ判定`)をビルド結果に反映できるスクリプト。
 
-- Bパターン (環境変数で 秘匿ファイルの復号化キーを取り扱う)  
+- Bパターン (環境変数で 秘匿情報ファイルの復号化キーを取り扱う)  
   - 環境変数に秘匿情報の復号キー(OpenSSL暗号化秘匿情報ファイルのパスワード)を設定することで、  
   リポジトリに存在しない秘匿情報(アプリ名`記憶力判定`)をビルド結果に反映できるスクリプト。
   
@@ -228,6 +317,15 @@ $ ./build_assists/scripts/decode_from_public.sh encode_app_name_ios.txt decode_a
 $ flutter run
 ```
 
+<br/>
+
+*【補足】秘匿情報の復元と`$ flutter run`までを一括して行うスクリプトも用意しています。*
+```bash
+# flutter run 実行前に、iOS シミュレーターか Android エミュレータを起動しておいてください。
+$ export PASSWD=hogefuga
+$ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
+```
+
 <table>
 <thead><tr><th>ビルド後のホーム画面</th><th>アプリアイコン</th></tr></thead>
 <tr>
@@ -244,6 +342,15 @@ $ flutter run
 $ export PASSWD=hogefuga
 $ ./build_assists/scripts/decode_from_public.sh encode_app_name_android.txt decode_app_name_android.txt PASSWD
 $ flutter run
+```
+
+<br/>
+
+*【補足】秘匿情報の復元と`$ flutter run`までを一括して行うスクリプトも用意しています。*
+```bash
+# flutter run 実行前に、iOS シミュレーターか Android エミュレータを起動しておいてください。
+$ export PASSWD=hogefuga
+$ ./build_assists/scripts/restore_app_name_secret_by_openssl.sh
 ```
 
 <table>
