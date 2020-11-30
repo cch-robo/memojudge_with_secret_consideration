@@ -42,7 +42,7 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 #### 秘匿情報を復元する基本的なパターンの全体構成概要
 
 **秘匿情報を復元する基本的なパターン**を実現するためには、各種機能ごとの連携が必要です。  
-スクリプトを機能させるには、入力元や出力先の規定や、ビルド中に処理をキックさせる設定も必要です。
+スクリプトを機能させるには、入力元や出力先の規定や、ビルド中に処理をキックさせる設定も必要です。  
 検証リポジトリでは、各機能ごとに連携できるよう、以下の全体構成をとりました。
 
 - **秘匿情報復元作業ディレクトリ構成**  
@@ -84,11 +84,11 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 |[encode_openssl_work_to_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/encode_openssl_work_to_public.sh)|OpenSSLエンコード|`work_private/`に配置された秘匿情報ファイルを OpenSSLエンコード(暗号化)して `encode_public/`に出力します。|
 |[decode_from_private.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_private.sh)|Base64デコード|`encode_public/`に配置された暗号化済秘匿情報ファイルを OpenSSLデコード(復号化)して `decode_private/`に出力します。|
 |[decode_from_public.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/decode_from_public.sh)|OpenSSLデコード|`encode_private/`に配置されたBase64エンコード済ファイルを Base64デコードして `decode_private/`に出力します。|
-| アプリ名変更専用のリソース置換用スクリプト名 |
+|アプリ名変更専用 リソース置換用スクリプト名|
 |[restore_app_name_secret_by_openssl.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/restore_app_name_secret_by_openssl.sh)|一括処理|アプリ名変更用の補助スクリプト⇒OpenSSLを使った秘匿情報復元(暗号化済ファイルの復号化)から `$flutter run`までを一括して実行する。（環境変数 `PASSWD`に復号化キー(パスワード)を設定しておく必要があります ）|
 |[replace_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_ios.sh)|ビルド中処理|iOS用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された復元済の秘匿情報ファイル(`decode_app_name_ios.txt`)を`ios/Runner/Info.plist`にコピーします。|
 |[replace_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/replace_app_name_android.sh)|ビルド中処理|Android用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された復元済の秘匿情報ファイル(`decode_app_name_android.txt`)を`android/app/src/main/AndroidManifest.xml`にコピーします。|
-| アプリ名変更専用のリソース編集用スクリプト名|
+|アプリ名変更専用 リソース編集用スクリプト名|
 |[restore_app_name_secret_by_base64.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/restore_app_name_secret_by_base64.sh)|一括処理|アプリ名変更用の補助スクリプト⇒Base64を使った秘匿情報復元(変更するアプリ名の取得)から `$flutter run`までを一括して実行する。（環境変数 `APP_NAME`に Base64エンコードした変更アプリ名を設定しておく必要があります）|
 |[rewrite_app_name_ios.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_ios.sh)|ビルド中処理|iOS用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された変更アプリ名(`decode_app_name.txt`)の内容で、`ios/Runner/Info.plist`のアプリ名値を置換編集します。|
 |[rewrite_app_name_android.sh](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/build_assists/scripts/rewrite_app_name_android.sh)|ビルド中処理|Android用のアプリ名変更専用スクリプト⇒`decode_private/`に配置された変更アプリ名(`decode_app_name.txt`)の内容で、`android/app/src/main/AndroidManifest.xml`のアプリ名値を置換編集します。|
@@ -99,18 +99,18 @@ Flutter開発における [リポジトリでのシークレット情報取扱�
 
 |プラットフォーム|設定場所|設定方法|
 |----------|----------|----------|
-|iOS|Xcodeプロジェクト&nbsp;>&nbsp;Runner&nbsp;>&nbsp;TARGETS > Build Phase > Run Script|設定に、sh からビルド中スクリプトをキックさせるコマンドを追加する。|
-|Android|app: build.gradle|`build.gradle`ファイルの末尾に `project.afterEvaluate{}`を追加して、ビルド中スクリプトをキックさせる関数を追加する。|
+|iOS|[Xcodeプロジェクト](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/ios/Runner.xcodeproj/project.pbxproj) >&nbsp;Runner&nbsp;>&nbsp;TARGETS > Build Phase > Run Script|設定に、sh からビルド中スクリプトをキックさせるコマンドを追加する。|
+|Android|[app: build.gradle](https://github.com/cch-robo/memojudge_with_secret_consideration/blob/master/android/app/build.gradle)|`build.gradle`ファイルの末尾に `project.afterEvaluate{}`を追加して、ビルド中スクリプトをキックさせる関数を追加する。|
 
 <table>
-<theda><tr><th>iOSビルド設定例示 (Xcodeプロジェクト)</th></tr></theda>
+<theda><tr><th>iOSビルド処理のキック設定例 (Xcodeプロジェクト)</th></tr></theda>
 <tr>
   <td><img src="images/Xcode_RunScript.png" alt="Xcodeプロジェクト Run Script" style="max-width:100%;"></td>
 </tr>
 </table>
 
 <table>
-<theda><tr><th>Androidビルド設定例示 (app:build.gradle)</th></tr></theda>
+<theda><tr><th>Androidビルド処理のキック設定例 (app:build.gradle)</th></tr></theda>
 <tr>
   <td><pre><code>
 def replace_app_name() {
